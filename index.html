@@ -28,31 +28,42 @@
             min-height: 100vh;
         }
 
-        /* Estilo de imagen completa al inicio */
-        .hero-banner {
+        .hero-art {
+            position: relative;
             width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-            display: block;
+            height: 40vh;
+            background-image: url('imagen-1.png');
+            background-size: cover;
+            background-position: center 20%;
             border-bottom: 3px solid var(--sheikah-gold);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+        }
+
+        .hero-art::after {
+            content: "";
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 150px;
+            background: linear-gradient(to top, var(--bg-dark), transparent);
         }
 
         .ancient-font { font-family: 'Cinzel', serif; }
         .tech-font { font-family: 'Special Elite', cursive; }
 
-        .header-title-section {
+        .header-content {
+            position: absolute;
+            bottom: 20px; left: 0; right: 0;
+            z-index: 10;
             text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(to bottom, rgba(13,17,23,0), var(--bg-dark));
         }
 
         .header-title {
             background: linear-gradient(90deg, #ff4d4d, #f97316, #ff4d4d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-size: 3rem;
-            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            font-size: 2.5rem;
+            margin-bottom: 5px;
         }
 
         .main-container {
@@ -60,6 +71,7 @@
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
+            z-index: 5;
         }
 
         .clock-card {
@@ -110,7 +122,7 @@
         .is-master .master-only { display: flex; }
         
         .segment-marker { stroke: #000; stroke-width: 2.5; }
-        .icon-overlay { position: absolute; bottom: 10px; right: 15px; font-size: 1.5rem; opacity: 0.1; }
+        .icon-overlay { position: absolute; bottom: 10px; right: 15px; font-size: 1.5rem; opacity: 0.8; }
 
         #status-indicator {
             position: fixed; bottom: 15px; right: 15px; font-size: 11px;
@@ -121,16 +133,14 @@
 </head>
 <body>
 
-    <!-- Imagen completa al inicio -->
-    <img src="imagen-1.png" alt="[Cabecera de Fabula Ultima]" class="hero-banner">
-
-    <header class="header-title-section">
-        <h1 class="header-title ancient-font">Nexo de Relojes</h1>
-        <p class="tech-font text-sheikah-gold tracking-[0.3em] text-xs">🔥 MASTER KENTA 🔥</p>
-    </header>
+    <section class="hero-art">
+        <div class="header-content">
+            <h1 class="header-title ancient-font">Nexo de Relojes</h1>
+            <p class="tech-font text-sheikah-gold tracking-[0.3em] text-xs">🔥 MASTER KENTA 🔥</p>
+        </div>
+    </section>
 
     <div class="main-container">
-        <!-- Control de Acceso -->
         <div class="master-lock-container">
             <span class="tech-font text-[10px] text-gray-400">VIAJERO 👤</span>
             <label class="switch">
@@ -146,13 +156,12 @@
         </div>
 
         <main id="clocks-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="col-span-full text-center py-20 tech-font animate-pulse">Sintonizando flujo de maná con el Nexo...</div>
+            <div class="col-span-full text-center py-20 tech-font animate-pulse">Invocando el poder del Nexo...</div>
         </main>
     </div>
 
     <div id="status-indicator" class="tech-font">DESCONECTADO</div>
 
-    <!-- Modal de Creación -->
     <div id="modal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-[#1a1f26] border-2 border-sheikah-gold p-8 rounded-xl w-full max-w-sm shadow-2xl">
             <h2 class="ancient-font text-sheikah-gold text-2xl mb-6">Nuevo Destino</h2>
@@ -183,12 +192,20 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, onSnapshot, updateDoc, deleteDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'kenta-relays';
-
+       const firebaseConfig = {
+  apiKey: "AIzaSyC2MQCC0XK_uaxa8_H1WH274bGyGEepPlU",
+  authDomain: "relojes-kenta.firebaseapp.com",
+  projectId: "relojes-kenta",
+  storageBucket: "relojes-kenta.firebasestorage.app",
+  messagingSenderId: "969538165559",
+  appId: "1:969538165559:web:2770df616a21bf8acfd8b2",
+  measurementId: "G-HPE1WTY9M8"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const appId = "relojes-kenta-app"; // Puedes poner el nombre que quieras aquí
+        
         let clocks = [];
         let isMaster = false;
         let currentUser = null;
@@ -203,13 +220,14 @@
                 }
             } catch (err) {
                 console.error("Error de autenticación:", err);
-                document.getElementById('status-indicator').innerText = "ERROR DE CONEXIÓN";
+                document.getElementById('status-indicator').innerText = "ERROR DE IDENTIDAD";
             }
         }
 
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             if (user) {
+                console.log("Sesión iniciada:", user.uid);
                 startListening();
             }
         });
@@ -224,7 +242,7 @@
                 document.getElementById('status-indicator').style.color = "#00f2ff";
             }, (err) => {
                 console.error("Error en tiempo real:", err);
-                document.getElementById('status-indicator').innerText = "REINTENTANDO CONEXIÓN...";
+                document.getElementById('status-indicator').innerText = "ERROR DE PERMISOS";
             });
         }
 
@@ -238,7 +256,7 @@
                     localStorage.setItem('kenta_master_mode', 'true');
                 } else {
                     toggle.checked = false;
-                    alert("Runa de acceso inválida.");
+                    alert("Runa inválida.");
                 }
             } else {
                 isMaster = false;
@@ -253,7 +271,7 @@
 
         window.createClock = async function() {
             if (!isMaster || !currentUser) return;
-            const name = document.getElementById('clock-name').value || "Destino Sin Nombre";
+            const name = document.getElementById('clock-name').value || "Misión Desconocida";
             const type = document.getElementById('clock-type').value;
             const segments = parseInt(document.getElementById('clock-segments').value);
             
@@ -293,7 +311,7 @@
 
         window.deleteClock = async function(id) {
             if (!isMaster || !currentUser) return;
-            if (confirm("¿Desvanecer este reloj de la historia?")) {
+            if (confirm("¿Desvanecer este reloj?")) {
                 try {
                     await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clocks', id));
                 } catch (e) {
@@ -304,7 +322,7 @@
 
         window.clearAllClocks = async function() {
             if (!isMaster || !currentUser) return;
-            if (confirm("ATENCIÓN: Esto eliminará todos los relojes para todos los jugadores. ¿Continuar?")) {
+            if (confirm("¿Borrar todos los relojes?")) {
                 const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'clocks');
                 const querySnap = await getDocs(colRef);
                 querySnap.forEach(async (d) => {
@@ -318,7 +336,7 @@
             container.innerHTML = "";
 
             if (clocks.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center py-20 opacity-30 tech-font border-2 border-dashed border-gray-700 rounded-xl">El flujo de maná está en calma. No hay relojes activos.</div>`;
+                container.innerHTML = `<div class="col-span-full text-center py-20 opacity-30 tech-font border-2 border-dashed border-gray-700 rounded-xl">No hay destinos activos.</div>`;
             }
 
             const sorted = [...clocks].sort((a, b) => {
@@ -366,19 +384,17 @@
                         <button onclick="adjustProgress('${clock.id}', -1)" class="btn-kenta flex-1 font-bold text-xl">-</button>
                         <button onclick="adjustProgress('${clock.id}', 1)" class="btn-kenta flex-1 font-bold text-xl">+</button>
                     </div>
-                    <div class="icon-overlay">${clock.flavor}</div>
+                    <div class="icon-overlay opacity-20">${clock.flavor}</div>
                 `;
                 container.appendChild(card);
             });
         };
 
+        // Restaurar modo master visualmente de inmediato
         if (localStorage.getItem('kenta_master_mode') === 'true') {
             isMaster = true;
+            document.getElementById('master-toggle').checked = true;
             document.body.classList.add('is-master');
-            setTimeout(() => {
-                const toggle = document.getElementById('master-toggle');
-                if (toggle) toggle.checked = true;
-            }, 100);
         }
 
         initAuth();
