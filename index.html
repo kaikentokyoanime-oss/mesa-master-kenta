@@ -201,7 +201,11 @@
   appId: "1:969538165559:web:2770df616a21bf8acfd8b2",
   measurementId: "G-HPE1WTY9M8"
 };
-
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const appId = "relojes-kenta-app"; // Puedes poner el nombre que quieras aquí
+        
         let clocks = [];
         let isMaster = false;
         let currentUser = null;
