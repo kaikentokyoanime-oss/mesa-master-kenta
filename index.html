@@ -17,9 +17,13 @@
 
         body {
             background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
-            background-size: 40px 40px;
+            /* Imagen de fondo completa con efecto fade to black */
+            background-image: url('imagen-1.png');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            position: relative;
             color: #e0e0e0;
             font-family: 'Quicksand', sans-serif;
             margin: 0;
@@ -28,33 +32,60 @@
             min-height: 100vh;
         }
 
+        /* Overlay oscuro tipo "fade to black" para mejorar legibilidad */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(13,17,23,0.92));
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Asegurar que el contenido esté por encima del overlay */
+        .hero-art, .main-container, .master-lock-container, #status-indicator {
+            position: relative;
+            z-index: 2;
+        }
+
         .hero-art {
             position: relative;
             width: 100%;
-            height: 40vh;
-            background-image: url('imagen-1.png');
-            background-size: cover;
-            background-position: center 20%;
+            /* Eliminamos la imagen de fondo original y la altura fija que cortaba */
+            background: none;
             border-bottom: 3px solid var(--sheikah-gold);
             box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+            min-height: 35vh;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
         }
 
+        /* Eliminamos el degradado posterior que ya no es necesario */
         .hero-art::after {
-            content: "";
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 150px;
-            background: linear-gradient(to top, var(--bg-dark), transparent);
+            display: none;
         }
 
         .ancient-font { font-family: 'Cinzel', serif; }
         .tech-font { font-family: 'Special Elite', cursive; }
 
         .header-content {
-            position: absolute;
-            bottom: 20px; left: 0; right: 0;
+            position: relative;
+            bottom: auto;
+            left: auto;
+            right: auto;
             z-index: 10;
             text-align: center;
+            padding: 1.5rem 1rem;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(3px);
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            width: 90%;
+            max-width: 800px;
         }
 
         .header-title {
@@ -128,6 +159,23 @@
             position: fixed; bottom: 15px; right: 15px; font-size: 11px;
             padding: 5px 10px; background: rgba(0,0,0,0.7); border-radius: 4px;
             color: #555; pointer-events: none; z-index: 100;
+        }
+
+        /* Pequeño ajuste responsivo para que el header no tape contenido en móviles */
+        @media (max-width: 640px) {
+            .hero-art {
+                min-height: 28vh;
+            }
+            .header-title {
+                font-size: 1.8rem;
+            }
+            .header-content {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+            body {
+                background-attachment: scroll; /* mejor rendimiento en móviles */
+            }
         }
     </style>
 </head>
