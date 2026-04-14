@@ -12,19 +12,42 @@
             --sheikah-gold: #e3c07d;
             --danger-red: #ff4d4d;
             --bg-dark: #0d1117;
-            --panel-bg: rgba(20, 25, 35, 0.9);
+            --panel-bg: rgba(13, 17, 23, 0.85);
         }
 
         body {
             background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
-            background-size: 40px 40px;
             color: #e0e0e0;
             font-family: 'Quicksand', sans-serif;
             margin: 0;
             padding: 10px;
             overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Imagen de fondo principal */
+        .bg-image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: url('imagen-1.png');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.3) saturate(0.8) blur(2px);
+        }
+
+        /* Gradiente para mejorar legibilidad sobre el fondo */
+        .bg-gradient-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, transparent, var(--bg-dark));
         }
 
         .ancient-font { font-family: 'Cinzel', serif; }
@@ -35,25 +58,10 @@
             background: linear-gradient(90deg, #ff4d4d, #f97316, #ff4d4d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(249, 115, 22, 0.3);
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .main-banner {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto 20px;
-            border: 2px solid var(--sheikah-gold);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(227, 192, 125, 0.2);
-        }
-
-        .main-banner img {
-            width: 100%;
-            height: auto;
-            display: block;
+            text-shadow: 0 0 15px rgba(249, 115, 22, 0.5);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            padding-top: 20px;
         }
 
         .clock-card {
@@ -61,10 +69,15 @@
             border: 2px solid var(--sheikah-gold);
             border-radius: 15px;
             position: relative;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
             margin-bottom: 20px;
             padding: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .clock-card:hover {
+            transform: translateY(-5px);
         }
 
         .clock-card::before {
@@ -74,12 +87,12 @@
             border: 1px solid var(--ancient-blue);
             border-radius: 20px;
             pointer-events: none;
-            opacity: 0.3;
+            opacity: 0.2;
         }
 
         .clock-svg {
             transform: rotate(-90deg);
-            filter: drop-shadow(0 0 5px var(--ancient-blue));
+            filter: drop-shadow(0 0 8px var(--ancient-blue));
         }
 
         .progress-ring-circle {
@@ -88,7 +101,7 @@
         }
 
         .btn-kenta {
-            background: rgba(227, 192, 125, 0.1);
+            background: rgba(227, 192, 125, 0.15);
             border: 1px solid var(--sheikah-gold);
             color: var(--sheikah-gold);
             padding: 8px 15px;
@@ -98,6 +111,12 @@
             letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.2s;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-kenta:hover {
+            background: rgba(227, 192, 125, 0.3);
+            box-shadow: 0 0 10px var(--sheikah-gold);
         }
 
         .btn-kenta:active {
@@ -105,47 +124,42 @@
             color: black;
         }
 
-        .btn-kenta:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            border-color: #444;
-            color: #666;
-        }
-
         .segment-marker {
-            stroke: var(--bg-dark);
-            stroke-width: 2;
+            stroke: #000;
+            stroke-width: 2.5;
         }
 
         .icon-overlay {
             position: absolute;
-            bottom: 5px;
-            right: 5px;
-            font-size: 1.2rem;
-            opacity: 0.6;
+            bottom: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 5px black);
         }
 
         .fire-bg {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            opacity: 0.05;
-            pointer-events: none;
+            top: 10px; right: 10px;
+            z-index: 10;
+            opacity: 0.5;
+            font-size: 2rem;
         }
 
         .master-lock-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 12px 25px;
+            background: rgba(0,0,0,0.6);
             border-radius: 50px;
-            border: 1px solid rgba(227, 192, 125, 0.2);
+            border: 1px solid var(--sheikah-gold);
             max-width: fit-content;
             margin-left: auto;
             margin-right: auto;
+            backdrop-filter: blur(5px);
         }
 
         .switch {
@@ -161,7 +175,7 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #333;
+            background-color: #444;
             transition: .4s;
             border-radius: 24px;
         }
@@ -180,45 +194,48 @@
         input:checked + .slider:before { transform: translateX(26px); }
 
         .master-only { display: none; }
-        .is-master .master-only { block; }
+        .is-master .master-only { display: block; }
         .is-master #master-controls { display: flex; }
+
+        /* Ajustes para que el texto sea más legible sobre fondo complejo */
+        h3 {
+            text-shadow: 2px 2px 4px rgba(0,0,0,1);
+        }
     </style>
 </head>
-<body class="">
+<body>
 
+    <div class="bg-image-overlay"></div>
+    <div class="bg-gradient-overlay"></div>
     <div class="fire-bg">🔥</div>
 
-    <header class="mb-6">
+    <header class="mb-8 relative">
         <h1 class="header-title ancient-font">Relojes para Fabula Ultima<br>de 🔥 Master Kenta 🔥</h1>
         
-        <div class="main-banner">
-            <img src="imagen-1.png" alt="[Imagen de Héroes Cocinando y Trabajando]">
-        </div>
-
         <!-- Master Lock System -->
         <div class="master-lock-container">
-            <span class="tech-font text-[10px] md:text-xs" id="lock-label">MODO JUGADOR 👤</span>
+            <span class="tech-font text-[10px] md:text-xs text-white" id="lock-label">MODO JUGADOR 👤</span>
             <label class="switch">
                 <input type="checkbox" id="master-toggle" onchange="toggleMasterMode()">
                 <span class="slider"></span>
             </label>
-            <span class="tech-font text-[10px] md:text-xs">MODO MASTER ⚔️</span>
+            <span class="tech-font text-[10px] md:text-xs text-white">MODO MASTER ⚔️</span>
         </div>
 
-        <div class="flex flex-wrap gap-2 justify-center master-only" id="master-controls">
+        <div class="flex flex-wrap gap-3 justify-center master-only" id="master-controls">
             <button onclick="openModal()" class="btn-kenta tech-font">⚡ Nuevo Proyecto</button>
             <button onclick="clearAllClocks()" class="btn-kenta tech-font" style="border-color: #ff4d4d; color: #ff4d4d;">🧹 Limpiar Todo</button>
         </div>
     </header>
 
-    <main id="clocks-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+    <main id="clocks-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto px-4 pb-20">
         <!-- Relojes inyectados -->
     </main>
 
     <!-- Modal -->
-    <div id="modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-[#1a1f26] border-2 border-sheikah-gold p-6 rounded-xl w-full max-w-sm">
-            <h2 class="ancient-font text-sheikah-gold text-xl mb-4">Nueva Receta/Proyecto</h2>
+    <div id="modal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-[#1a1f26] border-2 border-sheikah-gold p-6 rounded-xl w-full max-w-sm shadow-2xl">
+            <h2 class="ancient-font text-sheikah-gold text-xl mb-4">Nueva Receta / Proyecto</h2>
             
             <label class="block text-xs uppercase mb-1 text-gray-400">Nombre del Reloj</label>
             <input type="text" id="clock-name" placeholder="Ej: Escapar de Impel Down" class="w-full bg-gray-900 border border-gray-700 p-2 mb-4 rounded text-white outline-none focus:border-cyan-400">
@@ -239,8 +256,8 @@
             </select>
 
             <div class="flex gap-2">
-                <button onclick="closeModal()" class="flex-1 bg-gray-800 text-white p-2 rounded">Cancelar</button>
-                <button onclick="createClock()" class="flex-1 bg-cyan-600 text-white p-2 rounded">Forjar Reloj</button>
+                <button onclick="closeModal()" class="flex-1 bg-gray-800 text-white p-2 rounded hover:bg-gray-700">Cancelar</button>
+                <button onclick="createClock()" class="flex-1 bg-cyan-700 text-white p-2 rounded hover:bg-cyan-600">Forjar Reloj</button>
             </div>
         </div>
     </div>
@@ -332,7 +349,7 @@
         }
 
         function getFlavorIcon() {
-            const icons = ['⚓', '🍖', '🧭', '🤖', '🍶', '⚔️', '🍳', '⌛', '🔥', '🏴‍☠️'];
+            const icons = ['⚓', '🍖', '🧭', '🤖', '🍶', '⚔️', '🍳', '⌛', '🔥', '🏴‍☠️', '💎', '🏺', '📜'];
             return icons[Math.floor(Math.random() * icons.length)];
         }
 
@@ -355,7 +372,7 @@
 
         function clearAllClocks() {
             if (!isMaster) return;
-            if(confirm("¿Borrar todos los relojes?")) {
+            if(confirm("¿Borrar todos los relojes activos?")) {
                 clocks = [];
                 saveToLocalStorage();
                 renderClocks();
@@ -367,7 +384,7 @@
             container.innerHTML = "";
 
             if (clocks.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center p-10 opacity-50 tech-font">No hay relojes activos.</div>`;
+                container.innerHTML = `<div class="col-span-full text-center p-20 opacity-70 tech-font bg-black/40 rounded-xl border border-dashed border-gray-600">No hay proyectos forjándose en este momento.</div>`;
             }
 
             clocks.forEach(clock => {
@@ -389,15 +406,15 @@
 
                 card.innerHTML = `
                     <div class="w-full flex justify-between items-start mb-2">
-                        <span class="tech-font text-sheikah-gold text-[10px] uppercase">${clock.type === 'goal' ? 'PROYECTO' : 'PELIGRO'}</span>
-                        ${isMaster ? `<button onclick="deleteClock(${clock.id})" class="text-gray-500 hover:text-red-500 transition-colors">×</button>` : '<span></span>'}
+                        <span class="tech-font text-sheikah-gold text-[10px] uppercase tracking-widest">${clock.type === 'goal' ? '✨ PROYECTO ✨' : '💀 PELIGRO 💀'}</span>
+                        ${isMaster ? `<button onclick="deleteClock(${clock.id})" class="text-gray-400 hover:text-red-500 transition-colors text-xl leading-none">&times;</button>` : '<span></span>'}
                     </div>
                     
-                    <h3 class="ancient-font text-center text-lg mb-4 text-white leading-tight min-h-[3rem] flex items-center">${clock.name}</h3>
+                    <h3 class="ancient-font text-center text-lg mb-6 text-white leading-tight min-h-[3rem] flex items-center px-2">${clock.name}</h3>
 
-                    <div class="relative mb-4">
-                        <svg class="clock-svg" width="140" height="140" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="45" fill="#111" stroke="#333" stroke-width="8" />
+                    <div class="relative mb-6">
+                        <svg class="clock-svg" width="160" height="160" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="rgba(0,0,0,0.6)" stroke="#333" stroke-width="8" />
                             <circle class="progress-ring-circle" 
                                 cx="50" cy="50" r="45" 
                                 fill="transparent" 
@@ -410,13 +427,13 @@
                             <circle cx="50" cy="50" r="4" fill="${color}" />
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <span class="tech-font text-2xl" style="color: ${color}">${clock.current}/${clock.segments}</span>
+                            <span class="tech-font text-3xl font-bold" style="color: ${color}; text-shadow: 0 0 10px rgba(0,0,0,0.8);">${clock.current}/${clock.segments}</span>
                         </div>
                     </div>
 
                     <div class="flex gap-4 w-full justify-center mt-2 ${isMaster ? '' : 'hidden'}">
-                        <button onclick="adjustProgress(${clock.id}, -1)" class="btn-kenta flex-1 font-bold text-xl">-</button>
-                        <button onclick="adjustProgress(${clock.id}, 1)" class="btn-kenta flex-1 font-bold text-xl">+</button>
+                        <button onclick="adjustProgress(${clock.id}, -1)" class="btn-kenta flex-1 font-bold text-2xl">-</button>
+                        <button onclick="adjustProgress(${clock.id}, 1)" class="btn-kenta flex-1 font-bold text-2xl">+</button>
                     </div>
 
                     <div class="icon-overlay">${clock.flavor}</div>
