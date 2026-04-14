@@ -17,64 +17,43 @@
 
         body {
             background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 40px 40px;
             color: #e0e0e0;
             font-family: 'Quicksand', sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 10px;
             overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* Hero Art Section: Aquí se ven todos los detalles */
-        .hero-art {
-            position: relative;
-            width: 100%;
-            height: 45vh; /* Ocupa casi la mitad de la pantalla inicial */
-            background-image: url('imagen-1.png');
-            background-size: cover;
-            background-position: center 20%;
-            border-bottom: 3px solid var(--sheikah-gold);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
-        }
-
-        /* Degradado para transición suave al contenido */
-        .hero-art::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 150px;
-            background: linear-gradient(to top, var(--bg-dark), transparent);
         }
 
         .ancient-font { font-family: 'Cinzel', serif; }
         .tech-font { font-family: 'Special Elite', cursive; }
 
-        .header-content {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            text-align: center;
-        }
-
         .header-title {
+            text-align: center;
             background: linear-gradient(90deg, #ff4d4d, #f97316, #ff4d4d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(249, 115, 22, 0.3);
+            font-size: 1.8rem;
             margin-bottom: 10px;
         }
 
-        .main-container {
-            padding: 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 5;
+        .main-banner {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            border: 2px solid var(--sheikah-gold);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(227, 192, 125, 0.2);
+        }
+
+        .main-banner img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .clock-card {
@@ -82,15 +61,20 @@
             border: 2px solid var(--sheikah-gold);
             border-radius: 15px;
             position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
             transition: all 0.3s ease;
+            margin-bottom: 20px;
             padding: 15px;
-            backdrop-filter: blur(5px);
         }
 
-        .clock-card:hover {
-            transform: scale(1.02);
-            border-color: var(--ancient-blue);
+        .clock-card::before {
+            content: "";
+            position: absolute;
+            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border: 1px solid var(--ancient-blue);
+            border-radius: 20px;
+            pointer-events: none;
+            opacity: 0.3;
         }
 
         .clock-svg {
@@ -99,7 +83,7 @@
         }
 
         .progress-ring-circle {
-            transition: stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: stroke-dashoffset 0.35s;
             transform-origin: 50% 50%;
         }
 
@@ -107,101 +91,156 @@
             background: rgba(227, 192, 125, 0.1);
             border: 1px solid var(--sheikah-gold);
             color: var(--sheikah-gold);
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s;
         }
 
-        .btn-kenta:hover:not(:disabled) {
+        .btn-kenta:active {
             background: var(--sheikah-gold);
             color: black;
+        }
+
+        .btn-kenta:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: #444;
+            color: #666;
+        }
+
+        .segment-marker {
+            stroke: var(--bg-dark);
+            stroke-width: 2;
+        }
+
+        .icon-overlay {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 1.2rem;
+            opacity: 0.6;
+        }
+
+        .fire-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+            pointer-events: none;
         }
 
         .master-lock-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin: 20px auto;
-            padding: 8px 20px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 30px;
-            border: 1px solid rgba(227, 192, 125, 0.3);
-            width: fit-content;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50px;
+            border: 1px solid rgba(227, 192, 125, 0.2);
+            max-width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        /* Switch styling */
-        .switch { position: relative; display: inline-block; width: 44px; height: 20px; }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
         .switch input { opacity: 0; width: 0; height: 0; }
+
         .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #333; transition: .4s; border-radius: 20px;
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 24px;
         }
+
         .slider:before {
-            position: absolute; content: ""; height: 14px; width: 14px;
-            left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;
+            position: absolute;
+            content: "";
+            height: 16px; width: 16px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
         }
+
         input:checked + .slider { background-color: var(--ancient-blue); }
-        input:checked + .slider:before { transform: translateX(24px); }
+        input:checked + .slider:before { transform: translateX(26px); }
 
         .master-only { display: none; }
-        .is-master .master-only { display: flex; }
-
-        .segment-marker { stroke: var(--bg-dark); stroke-width: 2; }
+        .is-master .master-only { block; }
+        .is-master #master-controls { display: flex; }
     </style>
 </head>
-<body>
+<body class="">
 
-    <section class="hero-art">
-        <div class="header-content">
-            <h1 class="header-title ancient-font">Relojes de Fabula Ultima</h1>
-            <p class="tech-font text-sheikah-gold tracking-widest text-sm">🔥 MASTER KENTA EDITION 🔥</p>
+    <div class="fire-bg">🔥</div>
+
+    <header class="mb-6">
+        <h1 class="header-title ancient-font">Relojes para Fabula Ultima<br>de 🔥 Master Kenta 🔥</h1>
+        
+        <div class="main-banner">
+            <img src="imagen-1.png" alt="[Imagen de Héroes Cocinando y Trabajando]">
         </div>
-    </section>
 
-    <div class="main-container">
         <!-- Master Lock System -->
         <div class="master-lock-container">
-            <span class="tech-font text-[10px] text-gray-400">JUGADOR</span>
+            <span class="tech-font text-[10px] md:text-xs" id="lock-label">MODO JUGADOR 👤</span>
             <label class="switch">
                 <input type="checkbox" id="master-toggle" onchange="toggleMasterMode()">
                 <span class="slider"></span>
             </label>
-            <span class="tech-font text-[10px] text-gray-400">MASTER</span>
+            <span class="tech-font text-[10px] md:text-xs">MODO MASTER ⚔️</span>
         </div>
 
-        <div id="master-controls" class="master-only justify-center gap-4 mb-8">
+        <div class="flex flex-wrap gap-2 justify-center master-only" id="master-controls">
             <button onclick="openModal()" class="btn-kenta tech-font">⚡ Nuevo Proyecto</button>
-            <button onclick="clearAllClocks()" class="btn-kenta tech-font text-red-400 border-red-400/50">🧹 Borrar Todo</button>
+            <button onclick="clearAllClocks()" class="btn-kenta tech-font" style="border-color: #ff4d4d; color: #ff4d4d;">🧹 Limpiar Todo</button>
         </div>
+    </header>
 
-        <main id="clocks-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Relojes inyectados -->
-        </main>
-    </div>
+    <main id="clocks-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+        <!-- Relojes inyectados -->
+    </main>
 
-    <!-- Modal para crear relojes -->
-    <div id="modal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4">
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-[#1a1f26] border-2 border-sheikah-gold p-6 rounded-xl w-full max-w-sm">
-            <h2 class="ancient-font text-sheikah-gold text-xl mb-4">Nueva Receta</h2>
-            <input type="text" id="clock-name" placeholder="Nombre del Reloj" class="w-full bg-gray-900 border border-gray-700 p-2 mb-4 rounded text-white outline-none">
+            <h2 class="ancient-font text-sheikah-gold text-xl mb-4">Nueva Receta/Proyecto</h2>
+            
+            <label class="block text-xs uppercase mb-1 text-gray-400">Nombre del Reloj</label>
+            <input type="text" id="clock-name" placeholder="Ej: Escapar de Impel Down" class="w-full bg-gray-900 border border-gray-700 p-2 mb-4 rounded text-white outline-none focus:border-cyan-400">
+            
+            <label class="block text-xs uppercase mb-1 text-gray-400">Tipo de Reloj</label>
             <select id="clock-type" class="w-full bg-gray-900 border border-gray-700 p-2 mb-4 rounded text-white outline-none">
-                <option value="goal">Meta (Azul)</option>
-                <option value="danger">Peligro (Rojo)</option>
+                <option value="goal">Meta (Azul Ancestral)</option>
+                <option value="danger">Peligro (Rojo Akainu)</option>
             </select>
-            <select id="clock-segments" class="w-full bg-gray-900 border border-gray-700 p-2 mb-6 rounded text-white">
+
+            <label class="block text-xs uppercase mb-1 text-gray-400">Segmentos</label>
+            <select id="clock-segments" class="w-full bg-gray-900 border border-gray-700 p-2 mb-6 rounded text-white outline-none">
                 <option value="4">4 Segmentos</option>
-                <option value="6" selected>6 Segmentos</option>
+                <option value="6">6 Segmentos</option>
                 <option value="8">8 Segmentos</option>
                 <option value="10">10 Segmentos</option>
                 <option value="12">12 Segmentos</option>
             </select>
+
             <div class="flex gap-2">
-                <button onclick="closeModal()" class="flex-1 bg-gray-800 text-white p-2 rounded">Cerrar</button>
-                <button onclick="createClock()" class="flex-1 bg-cyan-700 text-white p-2 rounded">Crear</button>
+                <button onclick="closeModal()" class="flex-1 bg-gray-800 text-white p-2 rounded">Cancelar</button>
+                <button onclick="createClock()" class="flex-1 bg-cyan-600 text-white p-2 rounded">Forjar Reloj</button>
             </div>
         </div>
     </div>
@@ -218,7 +257,14 @@
             if (savedClocks) {
                 clocks = JSON.parse(savedClocks);
             } else {
-                clocks.push({ id: 1, name: "Cocinar Curry Gran Pirata", type: "goal", segments: 6, current: 2, flavor: "🍳" });
+                clocks.push({
+                    id: 1,
+                    name: "Cocinar Curry Gran Pirata",
+                    type: "goal",
+                    segments: 6,
+                    current: 2,
+                    flavor: "🍳"
+                });
                 saveToLocalStorage();
             }
 
@@ -227,19 +273,21 @@
                 document.getElementById('master-toggle').checked = true;
                 document.body.classList.add('is-master');
             }
+            
             renderClocks();
         };
 
         function toggleMasterMode() {
             const toggle = document.getElementById('master-toggle');
             if (toggle.checked) {
-                const pin = prompt("PIN de Master:");
+                const pin = prompt("Introduce el PIN de Master Kenta para editar:");
                 if (pin === MASTER_PIN) {
                     isMaster = true;
                     document.body.classList.add('is-master');
                     localStorage.setItem('kenta_is_master', 'true');
                 } else {
                     toggle.checked = false;
+                    alert("PIN incorrecto.");
                 }
             } else {
                 isMaster = false;
@@ -249,21 +297,47 @@
             renderClocks();
         }
 
-        function saveToLocalStorage() { localStorage.setItem('kenta_clocks', JSON.stringify(clocks)); }
-        function openModal() { document.getElementById('modal').classList.remove('hidden'); }
-        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+        function saveToLocalStorage() {
+            localStorage.setItem('kenta_clocks', JSON.stringify(clocks));
+        }
+
+        function openModal() {
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
 
         function createClock() {
-            const name = document.getElementById('clock-name').value || "Proyecto";
+            if (!isMaster) return;
+            const name = document.getElementById('clock-name').value || "Sin Nombre";
             const type = document.getElementById('clock-type').value;
             const segments = parseInt(document.getElementById('clock-segments').value);
-            clocks.push({ id: Date.now(), name, type, segments, current: 0, flavor: '📜' });
+            
+            const newClock = {
+                id: Date.now(),
+                name,
+                type,
+                segments,
+                current: 0,
+                flavor: getFlavorIcon()
+            };
+
+            clocks.push(newClock);
             saveToLocalStorage();
             renderClocks();
             closeModal();
+            document.getElementById('clock-name').value = "";
+        }
+
+        function getFlavorIcon() {
+            const icons = ['⚓', '🍖', '🧭', '🤖', '🍶', '⚔️', '🍳', '⌛', '🔥', '🏴‍☠️'];
+            return icons[Math.floor(Math.random() * icons.length)];
         }
 
         function adjustProgress(id, amount) {
+            if (!isMaster) return;
             const clock = clocks.find(c => c.id === id);
             if (clock) {
                 clock.current = Math.min(Math.max(0, clock.current + amount), clock.segments);
@@ -273,15 +347,15 @@
         }
 
         function deleteClock(id) {
-            if(confirm("¿Eliminar este reloj?")) {
-                clocks = clocks.filter(c => c.id !== id);
-                saveToLocalStorage();
-                renderClocks();
-            }
+            if (!isMaster) return;
+            clocks = clocks.filter(c => c.id !== id);
+            saveToLocalStorage();
+            renderClocks();
         }
 
         function clearAllClocks() {
-            if(confirm("¿Borrar todos?")) {
+            if (!isMaster) return;
+            if(confirm("¿Borrar todos los relojes?")) {
                 clocks = [];
                 saveToLocalStorage();
                 renderClocks();
@@ -291,43 +365,61 @@
         function renderClocks() {
             const container = document.getElementById('clocks-container');
             container.innerHTML = "";
-            
+
+            if (clocks.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center p-10 opacity-50 tech-font">No hay relojes activos.</div>`;
+            }
+
             clocks.forEach(clock => {
-                const r = 45;
-                const circ = 2 * Math.PI * r;
-                const offset = circ - (clock.current / clock.segments) * circ;
+                const radius = 45;
+                const circumference = 2 * Math.PI * radius;
+                const offset = circumference - (clock.current / clock.segments) * circumference;
                 const color = clock.type === 'goal' ? '#00f2ff' : '#ff4d4d';
+                
+                const card = document.createElement('div');
+                card.className = `clock-card flex flex-col items-center`;
                 
                 let markers = "";
                 for(let i = 0; i < clock.segments; i++) {
-                    const angle = (i * 360 / clock.segments - 90) * (Math.PI / 180);
+                    const angle = (i * 360 / clock.segments) * (Math.PI / 180);
                     const x2 = 50 + 50 * Math.cos(angle);
                     const y2 = 50 + 50 * Math.sin(angle);
                     markers += `<line x1="50" y1="50" x2="${x2}" y2="${y2}" class="segment-marker" />`;
                 }
 
-                const card = document.createElement('div');
-                card.className = "clock-card flex flex-col items-center";
                 card.innerHTML = `
-                    <div class="w-full flex justify-between mb-2">
-                        <span class="text-[9px] tech-font text-sheikah-gold">${clock.type.toUpperCase()}</span>
-                        ${isMaster ? `<button onclick="deleteClock(${clock.id})" class="text-xs text-gray-500 hover:text-red-500">ELIMINAR</button>` : ''}
+                    <div class="w-full flex justify-between items-start mb-2">
+                        <span class="tech-font text-sheikah-gold text-[10px] uppercase">${clock.type === 'goal' ? 'PROYECTO' : 'PELIGRO'}</span>
+                        ${isMaster ? `<button onclick="deleteClock(${clock.id})" class="text-gray-500 hover:text-red-500 transition-colors">×</button>` : '<span></span>'}
                     </div>
-                    <h3 class="ancient-font text-center text-md mb-4 h-12 flex items-center text-white">${clock.name}</h3>
+                    
+                    <h3 class="ancient-font text-center text-lg mb-4 text-white leading-tight min-h-[3rem] flex items-center">${clock.name}</h3>
+
                     <div class="relative mb-4">
-                        <svg class="clock-svg" width="120" height="120" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="45" fill="#111" stroke="#333" stroke-width="6" />
-                            <circle class="progress-ring-circle" cx="50" cy="50" r="45" fill="transparent" stroke="${color}" stroke-width="7" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" />
+                        <svg class="clock-svg" width="140" height="140" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="#111" stroke="#333" stroke-width="8" />
+                            <circle class="progress-ring-circle" 
+                                cx="50" cy="50" r="45" 
+                                fill="transparent" 
+                                stroke="${color}" 
+                                stroke-width="8"
+                                stroke-dasharray="${circumference}" 
+                                stroke-dashoffset="${offset}"
+                                stroke-linecap="round" />
                             ${markers}
+                            <circle cx="50" cy="50" r="4" fill="${color}" />
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <span class="tech-font text-xl" style="color: ${color}">${clock.current}/${clock.segments}</span>
+                            <span class="tech-font text-2xl" style="color: ${color}">${clock.current}/${clock.segments}</span>
                         </div>
                     </div>
-                    <div class="flex gap-2 w-full ${isMaster ? '' : 'hidden'}">
-                        <button onclick="adjustProgress(${clock.id}, -1)" class="btn-kenta flex-1">-</button>
-                        <button onclick="adjustProgress(${clock.id}, 1)" class="btn-kenta flex-1">+</button>
+
+                    <div class="flex gap-4 w-full justify-center mt-2 ${isMaster ? '' : 'hidden'}">
+                        <button onclick="adjustProgress(${clock.id}, -1)" class="btn-kenta flex-1 font-bold text-xl">-</button>
+                        <button onclick="adjustProgress(${clock.id}, 1)" class="btn-kenta flex-1 font-bold text-xl">+</button>
                     </div>
+
+                    <div class="icon-overlay">${clock.flavor}</div>
                 `;
                 container.appendChild(card);
             });
