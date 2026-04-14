@@ -192,11 +192,15 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, onSnapshot, updateDoc, deleteDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app';
+       const firebaseConfig = {
+  apiKey: "AIzaSyC2MQCC0XK_uaxa8_H1WH274bGyGEepPlU",
+  authDomain: "relojes-kenta.firebaseapp.com",
+  projectId: "relojes-kenta",
+  storageBucket: "relojes-kenta.firebasestorage.app",
+  messagingSenderId: "969538165559",
+  appId: "1:969538165559:web:2770df616a21bf8acfd8b2",
+  measurementId: "G-HPE1WTY9M8"
+};
 
         let clocks = [];
         let isMaster = false;
