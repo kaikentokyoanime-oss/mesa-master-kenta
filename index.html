@@ -83,11 +83,19 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .btn-kenta:active {
             background: var(--sheikah-gold);
             color: black;
+        }
+
+        .btn-kenta:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: #444;
+            color: #666;
         }
 
         .segment-marker {
@@ -113,16 +121,74 @@
             opacity: 0.05;
             pointer-events: none;
         }
+
+        /* Toggle Master Switch */
+        .master-lock-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50px;
+            border: 1px solid rgba(227, 192, 125, 0.2);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px; width: 16px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: var(--ancient-blue); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .master-only { display: none; }
+        .is-master .master-only { display: block; }
+        .is-master .master-inline { display: inline-block; }
     </style>
 </head>
-<body>
+<body class="">
 
     <div class="fire-bg">🔥</div>
 
     <header class="mb-6">
         <h1 class="header-title ancient-font">Relojes para Fabula Ultima<br>de 🔥 Master Kenta 🔥</h1>
         
-        <div class="flex flex-wrap gap-2 justify-center">
+        <!-- Master Lock System -->
+        <div class="master-lock-container">
+            <span class="tech-font text-xs" id="lock-label">MODO JUGADOR 👤</span>
+            <label class="switch">
+                <input type="checkbox" id="master-toggle" onchange="toggleMasterMode()">
+                <span class="slider"></span>
+            </label>
+            <span class="tech-font text-xs">MODO MASTER ⚔️</span>
+        </div>
+
+        <div class="flex flex-wrap gap-2 justify-center master-only" id="master-controls">
             <button onclick="openModal()" class="btn-kenta tech-font">⚡ Crear Nuevo Proyecto</button>
             <button onclick="clearAllClocks()" class="btn-kenta tech-font" style="border-color: #ff4d4d; color: #ff4d4d;">🧹 Limpiar Todo</button>
         </div>
@@ -132,6 +198,7 @@
         <!-- Los relojes se inyectan aquí -->
     </main>
 
+    <!-- Modal de Creación -->
     <div id="modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-[#1a1f26] border-2 border-sheikah-gold p-6 rounded-xl w-full max-w-sm">
             <h2 class="ancient-font text-sheikah-gold text-xl mb-4">Nueva Receta/Proyecto</h2>
@@ -163,15 +230,17 @@
 
     <script>
         let clocks = [];
+        let isMaster = false;
+        const MASTER_PIN = "1234"; // Cambia esto a tu PIN secreto
 
         // Cargar datos al iniciar
         window.onload = () => {
             const savedClocks = localStorage.getItem('kenta_clocks');
+            const savedMasterStatus = localStorage.getItem('kenta_is_master') === 'true';
+            
             if (savedClocks) {
                 clocks = JSON.parse(savedClocks);
-                renderClocks();
             } else {
-                // Mock inicial solo si no hay nada guardado
                 clocks.push({
                     id: 1,
                     name: "Cocinar Curry Gran Pirata",
@@ -181,9 +250,38 @@
                     flavor: "🍳"
                 });
                 saveToLocalStorage();
-                renderClocks();
             }
+
+            // Restaurar modo master si estaba activo
+            if (savedMasterStatus) {
+                isMaster = true;
+                document.getElementById('master-toggle').checked = true;
+                document.body.classList.add('is-master');
+            }
+            
+            renderClocks();
         };
+
+        function toggleMasterMode() {
+            const toggle = document.getElementById('master-toggle');
+            
+            if (toggle.checked) {
+                const pin = prompt("Introduce el PIN de Master Kenta para editar:");
+                if (pin === MASTER_PIN) {
+                    isMaster = true;
+                    document.body.classList.add('is-master');
+                    localStorage.setItem('kenta_is_master', 'true');
+                } else {
+                    toggle.checked = false;
+                    alert("PIN incorrecto. Los secretos del Master están a salvo.");
+                }
+            } else {
+                isMaster = false;
+                document.body.classList.remove('is-master');
+                localStorage.setItem('kenta_is_master', 'false');
+            }
+            renderClocks();
+        }
 
         function saveToLocalStorage() {
             localStorage.setItem('kenta_clocks', JSON.stringify(clocks));
@@ -198,6 +296,7 @@
         }
 
         function createClock() {
+            if (!isMaster) return;
             const name = document.getElementById('clock-name').value || "Sin Nombre";
             const type = document.getElementById('clock-type').value;
             const segments = parseInt(document.getElementById('clock-segments').value);
@@ -224,6 +323,7 @@
         }
 
         function adjustProgress(id, amount) {
+            if (!isMaster) return;
             const clock = clocks.find(c => c.id === id);
             if (clock) {
                 clock.current = Math.min(Math.max(0, clock.current + amount), clock.segments);
@@ -233,12 +333,14 @@
         }
 
         function deleteClock(id) {
+            if (!isMaster) return;
             clocks = clocks.filter(c => c.id !== id);
             saveToLocalStorage();
             renderClocks();
         }
 
         function clearAllClocks() {
+            if (!isMaster) return;
             if(confirm("¿Seguro que quieres borrar todos los relojes de la aventura?")) {
                 clocks = [];
                 saveToLocalStorage();
@@ -251,7 +353,7 @@
             container.innerHTML = "";
 
             if (clocks.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center p-10 opacity-50 tech-font">No hay relojes activos en este momento, Master.</div>`;
+                container.innerHTML = `<div class="col-span-full text-center p-10 opacity-50 tech-font">No hay relojes activos, Master.</div>`;
             }
 
             clocks.forEach(clock => {
@@ -274,7 +376,7 @@
                 card.innerHTML = `
                     <div class="w-full flex justify-between items-start mb-2">
                         <span class="tech-font text-sheikah-gold text-sm uppercase">${clock.type === 'goal' ? 'PROYECTO' : 'PELIGRO'}</span>
-                        <button onclick="deleteClock(${clock.id})" class="text-gray-500 hover:text-red-500 transition-colors">×</button>
+                        ${isMaster ? `<button onclick="deleteClock(${clock.id})" class="text-gray-500 hover:text-red-500 transition-colors">×</button>` : '<span></span>'}
                     </div>
                     
                     <h3 class="ancient-font text-center text-lg mb-4 text-white leading-tight">${clock.name}</h3>
@@ -298,7 +400,7 @@
                         </div>
                     </div>
 
-                    <div class="flex gap-4 w-full justify-center mt-2">
+                    <div class="flex gap-4 w-full justify-center mt-2 ${isMaster ? '' : 'hidden'}">
                         <button onclick="adjustProgress(${clock.id}, -1)" class="btn-kenta flex-1 font-bold text-xl">-</button>
                         <button onclick="adjustProgress(${clock.id}, 1)" class="btn-kenta flex-1 font-bold text-xl">+</button>
                     </div>
