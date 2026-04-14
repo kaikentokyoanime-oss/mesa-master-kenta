@@ -37,9 +37,23 @@
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 10px rgba(249, 115, 22, 0.3);
             font-size: 1.8rem;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--sheikah-gold);
-            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .main-banner {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            border: 2px solid var(--sheikah-gold);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(227, 192, 125, 0.2);
+        }
+
+        .main-banner img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .clock-card {
@@ -111,9 +125,6 @@
             opacity: 0.6;
         }
 
-        .clock-type-goal { --clock-color: var(--ancient-blue); }
-        .clock-type-danger { --clock-color: var(--danger-red); }
-
         .fire-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -122,7 +133,6 @@
             pointer-events: none;
         }
 
-        /* Toggle Master Switch */
         .master-lock-container {
             display: flex;
             align-items: center;
@@ -133,6 +143,9 @@
             background: rgba(0,0,0,0.3);
             border-radius: 50px;
             border: 1px solid rgba(227, 192, 125, 0.2);
+            max-width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .switch {
@@ -167,8 +180,8 @@
         input:checked + .slider:before { transform: translateX(26px); }
 
         .master-only { display: none; }
-        .is-master .master-only { display: block; }
-        .is-master .master-inline { display: inline-block; }
+        .is-master .master-only { block; }
+        .is-master #master-controls { display: flex; }
     </style>
 </head>
 <body class="">
@@ -178,27 +191,31 @@
     <header class="mb-6">
         <h1 class="header-title ancient-font">Relojes para Fabula Ultima<br>de 🔥 Master Kenta 🔥</h1>
         
+        <div class="main-banner">
+            <img src="imagen-1.jpg" alt="[Imagen de Héroes Cocinando y Trabajando]">
+        </div>
+
         <!-- Master Lock System -->
         <div class="master-lock-container">
-            <span class="tech-font text-xs" id="lock-label">MODO JUGADOR 👤</span>
+            <span class="tech-font text-[10px] md:text-xs" id="lock-label">MODO JUGADOR 👤</span>
             <label class="switch">
                 <input type="checkbox" id="master-toggle" onchange="toggleMasterMode()">
                 <span class="slider"></span>
             </label>
-            <span class="tech-font text-xs">MODO MASTER ⚔️</span>
+            <span class="tech-font text-[10px] md:text-xs">MODO MASTER ⚔️</span>
         </div>
 
         <div class="flex flex-wrap gap-2 justify-center master-only" id="master-controls">
-            <button onclick="openModal()" class="btn-kenta tech-font">⚡ Crear Nuevo Proyecto</button>
+            <button onclick="openModal()" class="btn-kenta tech-font">⚡ Nuevo Proyecto</button>
             <button onclick="clearAllClocks()" class="btn-kenta tech-font" style="border-color: #ff4d4d; color: #ff4d4d;">🧹 Limpiar Todo</button>
         </div>
     </header>
 
-    <main id="clocks-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Los relojes se inyectan aquí -->
+    <main id="clocks-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+        <!-- Relojes inyectados -->
     </main>
 
-    <!-- Modal de Creación -->
+    <!-- Modal -->
     <div id="modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-[#1a1f26] border-2 border-sheikah-gold p-6 rounded-xl w-full max-w-sm">
             <h2 class="ancient-font text-sheikah-gold text-xl mb-4">Nueva Receta/Proyecto</h2>
@@ -231,9 +248,8 @@
     <script>
         let clocks = [];
         let isMaster = false;
-        const MASTER_PIN = "1234"; // Cambia esto a tu PIN secreto
+        const MASTER_PIN = "1234";
 
-        // Cargar datos al iniciar
         window.onload = () => {
             const savedClocks = localStorage.getItem('kenta_clocks');
             const savedMasterStatus = localStorage.getItem('kenta_is_master') === 'true';
@@ -252,7 +268,6 @@
                 saveToLocalStorage();
             }
 
-            // Restaurar modo master si estaba activo
             if (savedMasterStatus) {
                 isMaster = true;
                 document.getElementById('master-toggle').checked = true;
@@ -264,7 +279,6 @@
 
         function toggleMasterMode() {
             const toggle = document.getElementById('master-toggle');
-            
             if (toggle.checked) {
                 const pin = prompt("Introduce el PIN de Master Kenta para editar:");
                 if (pin === MASTER_PIN) {
@@ -273,7 +287,7 @@
                     localStorage.setItem('kenta_is_master', 'true');
                 } else {
                     toggle.checked = false;
-                    alert("PIN incorrecto. Los secretos del Master están a salvo.");
+                    alert("PIN incorrecto.");
                 }
             } else {
                 isMaster = false;
@@ -341,7 +355,7 @@
 
         function clearAllClocks() {
             if (!isMaster) return;
-            if(confirm("¿Seguro que quieres borrar todos los relojes de la aventura?")) {
+            if(confirm("¿Borrar todos los relojes?")) {
                 clocks = [];
                 saveToLocalStorage();
                 renderClocks();
@@ -353,7 +367,7 @@
             container.innerHTML = "";
 
             if (clocks.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center p-10 opacity-50 tech-font">No hay relojes activos, Master.</div>`;
+                container.innerHTML = `<div class="col-span-full text-center p-10 opacity-50 tech-font">No hay relojes activos.</div>`;
             }
 
             clocks.forEach(clock => {
@@ -363,7 +377,7 @@
                 const color = clock.type === 'goal' ? '#00f2ff' : '#ff4d4d';
                 
                 const card = document.createElement('div');
-                card.className = `clock-card clock-type-${clock.type} flex flex-col items-center`;
+                card.className = `clock-card flex flex-col items-center`;
                 
                 let markers = "";
                 for(let i = 0; i < clock.segments; i++) {
@@ -375,14 +389,14 @@
 
                 card.innerHTML = `
                     <div class="w-full flex justify-between items-start mb-2">
-                        <span class="tech-font text-sheikah-gold text-sm uppercase">${clock.type === 'goal' ? 'PROYECTO' : 'PELIGRO'}</span>
+                        <span class="tech-font text-sheikah-gold text-[10px] uppercase">${clock.type === 'goal' ? 'PROYECTO' : 'PELIGRO'}</span>
                         ${isMaster ? `<button onclick="deleteClock(${clock.id})" class="text-gray-500 hover:text-red-500 transition-colors">×</button>` : '<span></span>'}
                     </div>
                     
-                    <h3 class="ancient-font text-center text-lg mb-4 text-white leading-tight">${clock.name}</h3>
+                    <h3 class="ancient-font text-center text-lg mb-4 text-white leading-tight min-h-[3rem] flex items-center">${clock.name}</h3>
 
                     <div class="relative mb-4">
-                        <svg class="clock-svg" width="160" height="160" viewBox="0 0 100 100">
+                        <svg class="clock-svg" width="140" height="140" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="45" fill="#111" stroke="#333" stroke-width="8" />
                             <circle class="progress-ring-circle" 
                                 cx="50" cy="50" r="45" 
